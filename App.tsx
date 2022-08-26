@@ -21,6 +21,8 @@ import sliderData from './jsonData';
 // }
 
 const App = () => {
+  const [arrayValue, setArrayValue] = useState(sliderData);
+
   const [first, setfirst] = useState(0);
   const position = new Animated.ValueXY({x: 0, y: 0});
 
@@ -36,26 +38,58 @@ const App = () => {
 
   const pan = PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: Animated.event([
-      null,
-      {dx: position.x, dy: position.y},
-    ]),
-    onPanResponderStart: e => console.log(e),
+    // onPanResponderMove: Animated.event([
+    //   null,
+    //   {dx: position.x, dy: position.y},
+    // ]),
+    onPanResponderMove: (e, gesture) => {
+      if (gesture.moveY <= 500) {
+        position.setValue({
+          x: gesture.dx,
+          y: gesture.dy,
+        });
+      } else {
+        // setArrayValue((currentCourseGoals: any) => {
+        //   return currentCourseGoals.filter((item: any) => {
+        //     item.id !== first;
+        //     console.log('item', item);
+        //     console.log('Deleted data of index ====', item.id);
+
+        //   });
+        // }); // if (!first) {
+
+        setArrayValue(
+          arrayValue.filter((person: any) => {
+            return first !== person.id;
+          }),
+        );
+
+        // }
+        // setArrayValue((arrayValuedata: any) => {
+        //   return arrayValuedata.filter((item: any) => item.id !== first);
+        // });
+      }
+    },
+    // onPanResponderStart: e => console.log(e),
   });
 
   // const deleteGoalHandler = (id: number) => {
-  //   setCourseGoals((currentCourseGoals: any) => {
-  //     return currentCourseGoals.filter((item: any) => item.id !== id);
+  //   setArrayValue((currentCourseGoals: any) => {
+  //     return currentCourseGoals.filter((item: any) => {
+  //       item.id !== id;
+  //       console.log('item', item);
+  //     });
   //   });
   // };
+
   console.log('first value on console', first);
   return (
     <View style={styles.mainContainer}>
-      {sliderData.map((item: any, index: any) => {
+      {arrayValue.map((item: any, index: any) => {
         if (index === first) {
           return (
             <Animated.View
-              key={item.id + index.toString()}
+              key={index}
               onResponderStart={() => {
                 console.log('dsffdsfdssdfsdr');
               }}
@@ -75,7 +109,7 @@ const App = () => {
                 ],
               }}>
               <TouchableOpacity
-                onPress={() => {
+                onPressIn={() => {
                   setfirst(index);
                 }}>
                 <Text style={styles.text}>{item.value}</Text>
@@ -85,7 +119,7 @@ const App = () => {
         } else {
           return (
             <Animated.View
-              key={item.id + index.toString()}
+              key={index}
               {...pan.panHandlers}
               style={{
                 width: 60,
@@ -102,7 +136,7 @@ const App = () => {
                 // ],
               }}>
               <TouchableOpacity
-                onPress={() => {
+                onPressIn={() => {
                   setfirst(index);
                 }}>
                 <Text style={styles.text}>{item.value}</Text>

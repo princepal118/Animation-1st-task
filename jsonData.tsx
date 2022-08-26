@@ -1,7 +1,7 @@
 const sliderData = [
-  {value: 'first', id: 0},
-  {value: 'Second', id: 1},
-  {value: 'Third', id: 2},
+  {value: 'first', id: 4},
+  {value: 'Second', id: 7},
+  {value: 'Third', id: 8},
   // {value: 'Fourth', id: 4},
   // {value: 'Fifth', id: 5},
   // {value: 'Six', id: 6},
